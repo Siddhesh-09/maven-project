@@ -7,6 +7,9 @@ pool:
   demands:
     - Agent.Name -equals azure-devops-agent
 
+variables:
+  azureSubscription: 'azure-devops-dev'
+
 stages:
 - stage: build
   displayName: "Build the code"
@@ -80,7 +83,7 @@ stages:
     - task: AzureWebApp@1
       displayName: 'Deploy to Dev Azure Web App'
       inputs:
-        azureSubscription: 'azure-devops-dev'
+        azureSubscription: '$(azureSubscription)'
         appType: 'webApp'
         appName: '$(azureAppNmae)'   #you need to update app name as per your project
         package: '$(System.ArtifactsDirectory)/drop/webapp.war'

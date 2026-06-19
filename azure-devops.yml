@@ -8,5 +8,5 @@ pool:
 
 steps:
   
-- script: mvn compile
-  displayName: 'Compile Maven Project'
+- script: mvn test
+  displayName: 'Unit Test Framework Maven Project'

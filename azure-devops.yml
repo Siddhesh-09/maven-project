@@ -10,3 +10,8 @@ steps:
   
 - script: mvn test
   displayName: 'Unit Test Framework Maven Project'
+  
+- script: mvn package
+  displayName: 'Generate build package/Artifact'
+  env:
+    MAVEN_OPTS: -DskipTests=true

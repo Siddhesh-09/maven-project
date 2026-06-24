@@ -4,13 +4,11 @@ trigger:
 pool:
   vmImage:
     - 'ubuntu-latest'
-    
+
 steps:
 - script: echo "Hello from Azure Pipeline using Bash!" > abc.sh
   displayName: 'Print Hello'
 
-- script: 'ls -lrt'
-  displayName: 'List files'
 
 - script: mvn validate
   displayName: 'Validate Maven project'

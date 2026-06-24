@@ -1,17 +1,1 @@
-trigger:
-- main       #LIST       # Runs when changes are pushed to the 'main' branch
-- master
-- devops
-
-pool:
-  vmImage: 'ubuntu-latest'  # Use Microsoft-hosted Ubuntu agent
-
-steps:
-  
-- script: mvn test
-  displayName: 'Unit Test Framework Maven Project'
-  
-- script: mvn package
-  displayName: 'Generate build package/Artifact'
-  env:
-    MAVEN_OPTS: -DskipTests=true
+a

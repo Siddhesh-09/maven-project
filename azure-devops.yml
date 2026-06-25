@@ -14,3 +14,6 @@ steps:
 
 - script: mvn compile
   displayName: 'Compile Maven Project'
+
+- script: mvn test
+  displayName: 'Run Maven Tests'

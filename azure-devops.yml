@@ -1,27 +1,53 @@
 trigger:
-- main   # Runs when changes are pushed to the 'main' branch
+- main       #LIST       # Runs when changes are pushed to the 'main' branch
+- master
+- devops
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-latest'  # Use Microsoft-hosted Ubuntu agent
 
 steps:
-
 - script: mvn test
   displayName: 'Run Maven Tests'
 
+- script: mvn versions:set -DnewVersion=1.1.$(Build.BuildId)-SNAPSHOT
+  displayName: 'Set dynamic version'
+
 - script: mvn package
-  displayName: 'Generate build Package/Artifact'
+  displayName: 'Generate build package/Artifact'
   env:
-    MAVEN_OPTIS: -DskipTests=true
+    MAVEN_OPTS: -DskipTests=true
+
+- script: mvn install
+  displayName: 'copy the artifact to local maven repository'
+  env:
+    MAVEN_OPTS: -DskipTests=true
 
 - task: CopyFiles@2
   inputs:
-    Contents: '**/*.war'
-    TargetFolder: 'c:\agent_work\' #'$(Build.ArtifactStagingDirectory)'
+    #SourceFolder: '/home/vsts/work/1/s/webapp/target'  # Adjust the path to your build output
+    Contents: '**/*.war'  # Adjust the pattern to match your build artifacts
+    TargetFolder: '$(Build.ArtifactStagingDirectory)' #'$(Build.ArtifactStagingDirectory)'  #c:\agent_work\1\a.
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: 'c:\agent_work\' #'$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
+- task: AzureCLI@2
+  inputs:
+    displayName: 'Upload WAR to Azure storage'
+    connectedServiceNameARM: 'azure-portal-service-connection'   #you need to update this -> azure devops-> service connection name
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az login --service-principal -u $(AZURE_CLIENT_ID) -p $(AZURE_CLIENT_SECRET) --tenant $(AZURE_TENANT_ID)
+      echo "Uploading WAR to Azure Storage..."
+      az storage blob upload \
+        --account-name $(AZURE_STORAGE_ACCOUNT) \
+        --container-name azurecontainerwhtans \
+        --name webapp-$(date +%Y%m%d%H%M%S).war \
+        --file /home/vsts/work/1/s/webapp/target/webapp.war \
+        --auth-mode key
+      echo "Upload completed successfully"

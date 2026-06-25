@@ -11,3 +11,6 @@ steps:
 
 - script: mvn validate
   displayName: 'Validate Maven project'
+
+- script: mvn compile
+  displayName: 'Compile Maven Project'

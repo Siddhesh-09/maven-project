@@ -46,7 +46,7 @@ steps:
       echo "Uploading WAR to Azure Storage..."
       az storage blob upload \
         --account-name $(AZURE_STORAGE_ACCOUNT) \
-        --container-name azurecontainerwhtans \
+        --container-name $(AZURE_STORAGE_CONTAINER) \
         --name webapp-$(date +%Y%m%d%H%M%S).war \
         --file /home/vsts/work/1/s/webapp/target/webapp.war \
         --auth-mode key

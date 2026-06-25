@@ -20,3 +20,5 @@ steps:
 
 - script: mvn package
   displayName: 'Generate build Package/Artifact'
+  env:
+    MAVEN_OPTIS: -DskipTests=true

@@ -17,3 +17,6 @@ steps:
 
 - script: mvn test
   displayName: 'Run Maven Tests'
+
+- script: mvn package
+  displayName: 'Generate build Package/Artifact'
